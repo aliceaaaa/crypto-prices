@@ -1,4 +1,4 @@
-import { TradeWidget } from './features/trade';
+import { TradeWidget } from './features';
 
 export const App = () => (
   <div>

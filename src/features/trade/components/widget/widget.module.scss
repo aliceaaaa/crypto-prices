@@ -1,11 +1,11 @@
-@use '/src/styles/variables.scss';
+@use '/src/styles/variables.scss'as v;
 
 .card {
   width: 260px;
   padding: 16px;
   border-radius: 12px;
-  background: $black;
-  color: $white;
+  background: v.$black;
+  color: v.$white;
 }
 
 .price {
@@ -15,12 +15,12 @@
 }
 
 .up {
-  color: $green;
+  color: v.$green;
   transform: translateY(-2px);
 }
 
 .down {
-  color: $red;
+  color: v.$red;
   transform: translateY(2px);
 }
 

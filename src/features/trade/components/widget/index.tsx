@@ -1,12 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { selectTradeConnected, selectTradeStats } from '../../model/selectors';
+import { useDispatch, useSelector } from 'react-redux';
+
+import * as str from '../../../../constants/strings';
+import * as sel from '../../model/selectors';
+import { MiniChart } from '../chart';
+import { setSymbol } from '../../model/slice';
+import { useLerp } from '../../hooks/use-lerp';
 
 import styles from './widget.module.scss';
 
 export function TradeWidget() {
-  const stats = useSelector(selectTradeStats);
-  const connected = useSelector(selectTradeConnected);
+  const stats = useSelector(sel.selectTradeStats);
+  const history = useSelector(sel.selectHistory);
+  const connected = useSelector(sel.selectTradeConnected);
+  const symbol = useSelector(sel.selectSymbol);
+
+  const dispatch = useDispatch();
 
   const prevPrice = useRef<number | null>(null);
 
@@ -30,6 +39,8 @@ export function TradeWidget() {
     prevPrice.current = stats.avgPrice;
   }, [stats]);
 
+  const smoothPrice = useLerp(stats?.avgPrice || 0);
+
   if (!connected) {
     return <div className={styles.card}>Disconnected</div>;
   }
@@ -40,11 +51,21 @@ export function TradeWidget() {
 
   return (
     <div className={styles.card}>
+      <button
+        onClick={() =>
+          dispatch(
+            setSymbol(symbol === str.btcusdt ? str.ethusdt : str.btcusdt)
+          )
+        }
+      >
+        {symbol === str.btcusdt ? str.eth : str.btc}
+      </button>
       <div className={`${styles.price} ${styles[direction || '']}`}>
-        ${stats.avgPrice.toFixed(2)}
+        ${smoothPrice.toFixed(2)}
       </div>
 
       <div className={styles.meta}>Trades/sec: {stats.count}</div>
+      <MiniChart data={history} />
     </div>
   );
 }
