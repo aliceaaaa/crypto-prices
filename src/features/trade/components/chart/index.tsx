@@ -1,8 +1,10 @@
 import { TradeStats } from '../../model/types';
 
-import styles from './chart.module.scss';
+type Props = {
+  data: TradeStats[];
+};
 
-export function MiniChart({ data }: { data: TradeStats[] }) {
+export const MiniChart = ({ data }: Props) => {
   if (data.length < 2) {
     return null;
   }
@@ -20,8 +22,8 @@ export function MiniChart({ data }: { data: TradeStats[] }) {
     .join(' ');
 
   return (
-    <svg viewBox="0 0 100 100" className={styles.chart}>
+    <svg viewBox="0 0 100 100">
       <polyline fill="none" stroke="white" strokeWidth="2" points={points} />
     </svg>
   );
-}
+};

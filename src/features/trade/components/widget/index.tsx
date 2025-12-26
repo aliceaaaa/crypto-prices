@@ -6,10 +6,11 @@ import * as sel from '../../model/selectors';
 import { MiniChart } from '../chart';
 import { setSymbol } from '../../model/slice';
 import { useLerp } from '../../hooks/use-lerp';
+import { Toggle } from '../toggle';
 
 import styles from './widget.module.scss';
 
-export function TradeWidget() {
+export const TradeWidget = () => {
   const stats = useSelector(sel.selectTradeStats);
   const history = useSelector(sel.selectHistory);
   const connected = useSelector(sel.selectTradeConnected);
@@ -41,31 +42,29 @@ export function TradeWidget() {
 
   const smoothPrice = useLerp(stats?.avgPrice || 0);
 
-  if (!connected) {
-    return <div className={styles.card}>Disconnected</div>;
-  }
-
-  if (!stats) {
-    return <div className={styles.card}>Waiting for data…</div>;
-  }
+  const onToggleSymb = () =>
+    dispatch(setSymbol(symbol === str.btcusdt ? str.ethusdt : str.btcusdt));
 
   return (
     <div className={styles.card}>
-      <button
-        onClick={() =>
-          dispatch(
-            setSymbol(symbol === str.btcusdt ? str.ethusdt : str.btcusdt)
-          )
-        }
-      >
-        {symbol === str.btcusdt ? str.eth : str.btc}
-      </button>
-      <div className={`${styles.price} ${styles[direction || '']}`}>
-        ${smoothPrice.toFixed(2)}
-      </div>
-
-      <div className={styles.meta}>Trades/sec: {stats.count}</div>
-      <MiniChart data={history} />
+      <Toggle
+        val={symbol}
+        vals={[
+          { title: str.btcusdt, onClick: onToggleSymb },
+          { title: str.ethusdt, onClick: onToggleSymb },
+        ]}
+      />
+      {!connected && <div>Disconnected</div>}
+      {!stats && <div>Waiting for data…</div>}
+      {connected && stats && (
+        <>
+          <div className={`${styles.price} ${styles[direction || '']}`}>
+            ${smoothPrice.toFixed(2)}
+          </div>
+          <div className={styles.meta}>Trades/sec: {stats.count}</div>
+          <MiniChart data={history} />
+        </>
+      )}
     </div>
   );
-}
+};

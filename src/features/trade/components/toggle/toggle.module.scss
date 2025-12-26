@@ -1,0 +1,24 @@
+@use '/src/styles/variables.scss'as v;
+
+.toggle {
+  display: flex;
+  flex-direction: row;
+  border-radius: 8px;
+  border: 1px solid v.$white;
+  max-width: fit-content;
+  padding: 8px 0;
+  margin-bottom: 12px;
+}
+
+.button {
+  display: flex;
+  outline: none;
+  border: none;
+  background: none;
+  color: v.$white;
+  cursor: pointer;
+}
+
+.active {
+  color: v.$green;
+}

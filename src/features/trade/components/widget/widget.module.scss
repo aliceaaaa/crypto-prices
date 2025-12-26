@@ -1,7 +1,10 @@
 @use '/src/styles/variables.scss'as v;
 
 .card {
-  width: 260px;
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  min-width: 300px;
   padding: 16px;
   border-radius: 12px;
   background: v.$black;
