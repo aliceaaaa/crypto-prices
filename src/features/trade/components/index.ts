@@ -1,0 +1,1 @@
+export { TradeWidget } from './widget';
